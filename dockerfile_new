@@ -1,0 +1,21 @@
+FROM caddy:2-builder AS builder
+
+# 设置 Goproxy 以加速
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+
+# 编译 Caddy 所需插件
+RUN xcaddy build ${version} \
+    --with github.com/caddy-dns/alidns
+
+# deploy 镜像
+FROM caddy:2 AS deploy
+
+# 从 builder 复制编译产物
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+LABEL version="${version}"
+LABEL Maintainer "WalterDSU <https://github.com/WalterDSU>"
+
+# 设置时区（不重要）
+ENV TZ Asia/Shanghai
+ENV ALIYUN_ACCESS_KEY_ID 阿里云的KEYID
+ENV ALIYUN_ACCESS_KEY_SECRET 阿里云的key
