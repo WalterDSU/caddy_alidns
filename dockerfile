@@ -6,7 +6,7 @@ RUN set -e \
     && export version=$(curl -s "https://api.github.com/repos/caddyserver/caddy/releases/latest" | jq -r .tag_name) \
     && echo ">>>>>>>>>>>>>>> ${version} ###############" \
     && go get -u github.com/caddyserver/xcaddy/cmd/xcaddy \
-    && xcaddy build ${version} --output /caddy \
+    && xcaddy build ${version} --output /caddy_alidns \
         --with github.com/caddy-dns/alidns \
 
     
